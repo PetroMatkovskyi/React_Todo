@@ -1,5 +1,21 @@
+a,
+h2,
+h5,
+p,
+button,
+ul,
+li,
+div {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  border: none;
+}
+
 .App {
-  text-align: center;
+  max-width: 1500px;
+  margin: auto;
+  min-height: 100vh;
 }
 
 .App-logo {

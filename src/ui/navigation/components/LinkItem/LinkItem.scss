@@ -1,0 +1,45 @@
+.links {
+  &__item {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 18px;
+    color: black;
+    padding: 0 10px;
+
+    .linkRemove {
+      display: flex;
+      position: absolute;
+      top: 0;
+      right: 0px;
+      transition: all 0.4s;
+      font-size: 19px;
+      align-content: stretch;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+    }
+    &:hover {
+      color: #7b7b7b;
+      .linkRemove {
+        right: -25px;
+        background: white;
+        opacity: 1;
+        transform: rotate(45deg);
+      }
+    }
+
+    &:active {
+      color: #cf8c8c;
+    }
+  }
+  // &__edit-form {
+  // }
+  &__edit-name {
+    width: (149-8px);
+  }
+}

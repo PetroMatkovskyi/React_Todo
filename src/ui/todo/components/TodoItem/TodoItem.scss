@@ -1,0 +1,41 @@
+.todo {
+  &__list-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between !important;
+    align-items: center;
+    margin: 5px 0;
+    height: 40px;
+    border: 1px solid grey;
+    padding: 10px 15px;
+    border-radius: 10px 30px;
+    &:nth-child(n + 2) {
+      margin-top: 10px;
+    }
+  }
+  &__check {
+    display: flex;
+    flex-direction: row;
+    min-width: 80%;
+  }
+
+  &__completed {
+    & .todo__list-item {
+      border-color: green;
+    }
+  }
+  &__remove {
+    width: 20px;
+    height: 20px;
+    font-size: 15px;
+    border-radius: 50%;
+    background: transparent;
+    border: 2px grey solid;
+    &:hover {
+      color: red;
+    }
+    &:active {
+      border-color: red;
+    }
+  }
+}
