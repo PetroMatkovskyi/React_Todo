@@ -1,0 +1,10 @@
+export const GET_TODO = 'GET_TODO';
+export const COMPLETED_TOGGLE = 'COMPLETED_TOGGLE';
+export const REMOVE_TASK = 'REMOVE_TASK';
+export const EDIT_TASK_TOGGLE = 'EDIT_TASK_TOGGLE';
+export const CHANGE_TASK_TITLE = 'CHANGE_TASK_TITLE';
+export const ADD_TASK = 'ADD_TASK';
+export const ADD_LIST = 'ADD_LIST';
+export const REMOVE_LIST = 'REMOVE_LIST';
+export const EDIT_LIST_TOGGLE = 'EDIT_LIST_TOGGLE';
+export const CHANGE_LIST_NAME = 'CHANGE_LIST_NAME';

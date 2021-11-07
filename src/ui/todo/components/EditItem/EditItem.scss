@@ -1,0 +1,20 @@
+.todo {
+  &__onEdit {
+    padding: 5px 10px;
+    min-width: 100%;
+    border: 2px solid gray;
+    border-radius: 10px;
+
+    &_completed {
+      border: 2px solid green;
+    }
+  }
+  &__title {
+    display: flex;
+    align-items: center;
+    &_completed {
+      color: gray;
+      text-decoration: line-through;
+    }
+  }
+}

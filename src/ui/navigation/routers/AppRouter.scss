@@ -1,0 +1,9 @@
+.navigation {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  column-gap: 15px;
+}
+
+.body {
+  padding: 10px;
+}

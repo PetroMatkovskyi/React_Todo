@@ -1,0 +1,34 @@
+.links {
+  padding-right: 5px;
+  border-right: 1px solid grey;
+
+  &__list {
+    & li:nth-child(n) {
+      margin-top: 10px;
+    }
+  }
+}
+.list-add {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  cursor: pointer;
+
+  &:hover {
+    .list-add__plus {
+      font-size: 24px;
+      transform: rotate(45deg);
+      color: rgb(94, 78, 78);
+    }
+    .list-add__title {
+      color: rgb(94, 78, 78);
+      font-size: 16px;
+    }
+  }
+  &__plus,
+  &__title {
+    transition: all 0.2s;
+  }
+}
