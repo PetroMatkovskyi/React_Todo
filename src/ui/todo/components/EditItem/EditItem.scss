@@ -1,9 +1,10 @@
 .todo {
   &__onEdit {
-    padding: 5px 10px;
+    padding: 0 10px;
     min-width: 100%;
     border: 2px solid gray;
     border-radius: 10px;
+    background: transparent;
 
     &_completed {
       border: 2px solid green;
