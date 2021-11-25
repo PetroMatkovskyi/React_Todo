@@ -256,6 +256,48 @@ export const todoReducer = (state = initialState, action) => {
         }
       });
 
+    case types.SORTABLE:
+      return state.map((list) => {
+        if (list.listId !== action.payload.todo.listId) {
+          return list;
+        } else {
+          return {
+            ...list,
+            list: {
+              ...list.list,
+              todo: action.payload.todo.completed
+                ? list.list.todo
+                : list.list.todo.map((item, index) => {
+                    if (index < action.payload.hoverIndex) {
+                      return item;
+                    } else if (index === action.payload.hoverIndex) {
+                      return list.list.todo[action.payload.todo.index];
+                    } else if (
+                      index > action.payload.hoverIndex &&
+                      index <= action.payload.todo.index
+                    ) {
+                      return list.list.todo[index - 1];
+                    } else {
+                      return item;
+                    }
+                  }),
+              completed: !action.payload.todo.completed
+                ? list.list.completed
+                : list.list.completed.map((item, index) => {
+                    if (index === action.payload.hoverIndex) {
+                      delete action.payload.todo.index;
+                      return action.payload.todo;
+                    } else if (index > action.payload.hoverIndex) {
+                      return list.list.completed[index - 1];
+                    } else {
+                      return item;
+                    }
+                  }),
+            },
+          };
+        }
+      });
+
     default:
       return state;
   }

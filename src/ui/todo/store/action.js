@@ -52,3 +52,8 @@ export const dropInCompleted = (item) => ({
   type: types.DROP_IN_COMPLETED,
   payload: item,
 });
+
+export const sortable = (todo, hoverIndex) => ({
+  type: types.SORTABLE,
+  payload: { todo, hoverIndex },
+});

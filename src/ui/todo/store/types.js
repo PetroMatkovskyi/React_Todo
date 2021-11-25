@@ -10,3 +10,4 @@ export const EDIT_LIST_TOGGLE = 'EDIT_LIST_TOGGLE';
 export const CHANGE_LIST_NAME = 'CHANGE_LIST_NAME';
 export const DROP_IN_TODO = 'DROP_IN_TODO';
 export const DROP_IN_COMPLETED = 'DROP_IN_COMPLETED';
+export const SORTABLE = 'SORTABLE';
