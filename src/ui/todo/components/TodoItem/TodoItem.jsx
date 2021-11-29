@@ -1,14 +1,14 @@
+import { useCallback, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
+import { useDrag, useDrop } from 'react-dnd';
 import { Checkbox, IconButton, ListItem } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useDrag, useDrop } from 'react-dnd';
 
 import { completedToggle, editToggle, removeTask, sortable } from '../../store/action';
 import { EditItem } from '../EditItem/EditItem';
 import { COMPLETED_ITEM, TODO_ITEM } from '../../dnd/types';
 
 import './TodoItem.scss';
-import { useRef } from 'react';
 
 export const TodoItem = ({ todo, index }) => {
   const dispatch = useDispatch();
@@ -30,9 +30,8 @@ export const TodoItem = ({ todo, index }) => {
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: todo.completed ? COMPLETED_ITEM : TODO_ITEM,
-      item: { ...todo, index },
+      item: { todo, index },
       collect: (monitor) => {
-        // console.log(monitor);
         return {
           isDragging: monitor.isDragging(),
         };
@@ -41,15 +40,18 @@ export const TodoItem = ({ todo, index }) => {
     []
   );
 
-  const [, drop] = useDrop({
+  const [{ isOver }, drop] = useDrop({
     accept: todo.completed ? COMPLETED_ITEM : TODO_ITEM,
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
     hover(item, monitor) {
       if (!ref.current) return;
 
-      const dragElement = item;
+      const dragIndex = item.index;
       const hoverIndex = index;
 
-      if (dragElement.index === hoverIndex) return;
+      if (dragIndex === hoverIndex) return;
 
       // Determine rectangle on screen
       const hoverBoundingRect = ref.current?.getBoundingClientRect();
@@ -63,19 +65,21 @@ export const TodoItem = ({ todo, index }) => {
       // When dragging downwards, only move when the cursor is below 50%
       // When dragging upwards, only move when the cursor is above 50%
       // Dragging downwards
-      if (dragElement.index < hoverIndex && hoverClientY < hoverMiddleY) {
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
         return;
       }
       // Dragging upwards
-      if (dragElement.index > hoverIndex && hoverClientY > hoverMiddleY) {
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
         return;
       }
-      dispatch(sortable(dragElement, hoverIndex));
+      dispatch(sortable(item.todo, dragIndex, hoverIndex));
+
       item.index = hoverIndex;
     },
   });
 
   const opacity = isDragging ? 0.4 : 1;
+  const background = isOver ? 'rgb(188,251,255)' : '';
   drag(drop(ref));
 
   return (
@@ -83,7 +87,7 @@ export const TodoItem = ({ todo, index }) => {
       ref={ref}
       onDoubleClick={onEditToggle}
       className="todo__list-item"
-      style={{ opacity }}
+      style={{ opacity, background }}
     >
       <div className="todo__check">
         <Checkbox
@@ -93,7 +97,7 @@ export const TodoItem = ({ todo, index }) => {
           type="checkbox"
           checked={todo.completed}
         />
-        <EditItem todo={todo} />
+        <EditItem todo={todo} index={index} />
       </div>
       <IconButton edge="end" aria-label="delete" onClick={onRemove}>
         <DeleteIcon />

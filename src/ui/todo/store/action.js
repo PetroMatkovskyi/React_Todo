@@ -53,7 +53,11 @@ export const dropInCompleted = (item) => ({
   payload: item,
 });
 
-export const sortable = (todo, hoverIndex) => ({
+export const sortable = (todo, dragIndex, hoverIndex) => ({
   type: types.SORTABLE,
-  payload: { todo, hoverIndex },
+  payload: { todo, hoverIndex, dragIndex },
 });
+
+export const sortable2 = (dragIndex, hoverIndex, state) => {
+  return () => ({ type: types.SORTABLE, payload: { hoverIndex, dragIndex } });
+};

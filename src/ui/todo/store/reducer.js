@@ -1,3 +1,4 @@
+import { arrayMoveImmutable } from 'array-move';
 import * as types from './types';
 
 const initialState = [
@@ -10,14 +11,28 @@ const initialState = [
         {
           listId: 0,
           id: 1,
-          title: 'delectus aut autemgu',
+          title: '0',
           completed: false,
-          edit: true,
+          edit: false,
         },
         {
           listId: 0,
           id: 2,
-          title: 'quis ut nam facilis et officia qui',
+          title: '1',
+          completed: false,
+          edit: false,
+        },
+        {
+          listId: 0,
+          id: 3,
+          title: '2',
+          completed: false,
+          edit: false,
+        },
+        {
+          listId: 0,
+          id: 4,
+          title: '3',
           completed: false,
           edit: false,
         },
@@ -25,7 +40,7 @@ const initialState = [
       completed: [
         {
           listId: 0,
-          id: 4,
+          id: 5,
           title: 'et porro tempora',
           completed: true,
           edit: false,
@@ -104,42 +119,42 @@ export const todoReducer = (state = initialState, action) => {
         }
       });
 
-    // case types.EDIT_TASK_TOGGLE:
-    //   return state.map((list, i) => {
-    //     if (action.payload.listId !== i) {
-    //       return list;
-    //     } else {
-    //       return {
-    //         ...list,
-    //         list: {
-    //           todo: state[i].list.todo.map((task) => {
-    //             if (task.id !== action.payload.id && !task.edit) {
-    //               return task;
-    //             } else {
-    //               return {
-    //                 ...task,
-    //                 title: task.title ? task.title : task.oldTitle,
-    //                 edit: !task.edit,
-    //                 oldTitle: task.title,
-    //               };
-    //             }
-    //           }),
-    //           completed: state[i].list.completed.map((task) => {
-    //             if (task.id !== action.payload.id && !task.edit) {
-    //               return task;
-    //             } else {
-    //               return {
-    //                 ...task,
-    //                 title: task.title ? task.title : task.oldTitle,
-    //                 edit: !task.edit,
-    //                 oldTitle: task.title,
-    //               };
-    //             }
-    //           }),
-    //         },
-    //       };
-    //     }
-    //   });
+    case types.EDIT_TASK_TOGGLE:
+      return state.map((list, i) => {
+        if (action.payload.listId !== i) {
+          return list;
+        } else {
+          return {
+            ...list,
+            list: {
+              todo: state[i].list.todo.map((task) => {
+                if (task.id !== action.payload.id && !task.edit) {
+                  return task;
+                } else {
+                  return {
+                    ...task,
+                    title: task.title ? task.title : task.oldTitle,
+                    edit: !task.edit,
+                    oldTitle: task.title,
+                  };
+                }
+              }),
+              completed: state[i].list.completed.map((task) => {
+                if (task.id !== action.payload.id && !task.edit) {
+                  return task;
+                } else {
+                  return {
+                    ...task,
+                    title: task.title ? task.title : task.oldTitle,
+                    edit: !task.edit,
+                    oldTitle: task.title,
+                  };
+                }
+              }),
+            },
+          };
+        }
+      });
 
     case types.CHANGE_TASK_TITLE:
       return state.map((list, i) => {
@@ -222,16 +237,16 @@ export const todoReducer = (state = initialState, action) => {
 
     case types.DROP_IN_TODO:
       return state.map((list) => {
-        if (list.listId !== action.payload.listId) {
+        if (list.listId !== action.payload.todo.listId) {
           return list;
         } else {
           return {
             ...list,
             list: {
               ...list.list,
-              todo: list.list.todo.concat([{ ...action.payload, completed: false }]),
+              todo: list.list.todo.concat([{ ...action.payload.todo, completed: false }]),
               completed: list.list.completed.filter(
-                (item) => item.id !== action.payload.id
+                (item) => item.id !== action.payload.todo.id
               ),
             },
           };
@@ -240,16 +255,16 @@ export const todoReducer = (state = initialState, action) => {
 
     case types.DROP_IN_COMPLETED:
       return state.map((list) => {
-        if (list.listId !== action.payload.listId) {
+        if (list.listId !== action.payload.todo.listId) {
           return list;
         } else {
           return {
             ...list,
             list: {
               ...list.list,
-              todo: list.list.todo.filter((item) => item.id !== action.payload.id),
+              todo: list.list.todo.filter((item) => item.id !== action.payload.todo.id),
               completed: list.list.completed.concat([
-                { ...action.payload, completed: true },
+                { ...action.payload.todo, completed: true },
               ]),
             },
           };
@@ -267,32 +282,19 @@ export const todoReducer = (state = initialState, action) => {
               ...list.list,
               todo: action.payload.todo.completed
                 ? list.list.todo
-                : list.list.todo.map((item, index) => {
-                    if (index < action.payload.hoverIndex) {
-                      return item;
-                    } else if (index === action.payload.hoverIndex) {
-                      return list.list.todo[action.payload.todo.index];
-                    } else if (
-                      index > action.payload.hoverIndex &&
-                      index <= action.payload.todo.index
-                    ) {
-                      return list.list.todo[index - 1];
-                    } else {
-                      return item;
-                    }
-                  }),
+                : arrayMoveImmutable(
+                    list.list.todo,
+                    action.payload.dragIndex,
+                    action.payload.hoverIndex
+                  ),
+
               completed: !action.payload.todo.completed
                 ? list.list.completed
-                : list.list.completed.map((item, index) => {
-                    if (index === action.payload.hoverIndex) {
-                      delete action.payload.todo.index;
-                      return action.payload.todo;
-                    } else if (index > action.payload.hoverIndex) {
-                      return list.list.completed[index - 1];
-                    } else {
-                      return item;
-                    }
-                  }),
+                : arrayMoveImmutable(
+                    list.list.completed,
+                    action.payload.dragIndex,
+                    action.payload.hoverIndex
+                  ),
             },
           };
         }
