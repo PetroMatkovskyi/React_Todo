@@ -42,3 +42,22 @@ export const changeListName = (newName) => ({
   type: types.CHANGE_LIST_NAME,
   payload: newName,
 });
+
+export const dropInTodo = (item) => ({
+  type: types.DROP_IN_TODO,
+  payload: item,
+});
+
+export const dropInCompleted = (item) => ({
+  type: types.DROP_IN_COMPLETED,
+  payload: item,
+});
+
+export const sortable = (todo, dragIndex, hoverIndex) => ({
+  type: types.SORTABLE,
+  payload: { todo, hoverIndex, dragIndex },
+});
+
+export const sortable2 = (dragIndex, hoverIndex, state) => {
+  return () => ({ type: types.SORTABLE, payload: { hoverIndex, dragIndex } });
+};

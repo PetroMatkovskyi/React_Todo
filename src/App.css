@@ -5,11 +5,13 @@ p,
 button,
 ul,
 li,
-div {
+div,
+input {
   margin: 0;
   padding: 0;
   list-style-type: none;
   border: none;
+  outline: none;
 }
 
 .App {

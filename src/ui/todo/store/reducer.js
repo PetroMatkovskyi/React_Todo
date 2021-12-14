@@ -1,3 +1,4 @@
+import { arrayMoveImmutable } from 'array-move';
 import * as types from './types';
 
 const initialState = [
@@ -10,14 +11,28 @@ const initialState = [
         {
           listId: 0,
           id: 1,
-          title: 'delectus aut autemgu',
+          title: '0',
           completed: false,
           edit: false,
         },
         {
           listId: 0,
           id: 2,
-          title: 'quis ut nam facilis et officia qui',
+          title: '1',
+          completed: false,
+          edit: false,
+        },
+        {
+          listId: 0,
+          id: 3,
+          title: '2',
+          completed: false,
+          edit: false,
+        },
+        {
+          listId: 0,
+          id: 4,
+          title: '3',
           completed: false,
           edit: false,
         },
@@ -25,7 +40,7 @@ const initialState = [
       completed: [
         {
           listId: 0,
-          id: 4,
+          id: 5,
           title: 'et porro tempora',
           completed: true,
           edit: false,
@@ -51,12 +66,16 @@ export const todoReducer = (state = initialState, action) => {
         if (i === 1) {
           return {
             ...item,
-            list: { ...item.list, todo: item.list.todo.concat(action.payload.todo) },
-            completed: item.list.completed.concat(action.payload.completed),
+            list: {
+              ...item.list,
+              todo: item.list.todo.concat(action.payload.todo),
+              completed: item.list.completed.concat(action.payload.completed),
+            },
           };
         }
         return item;
       });
+
     case types.COMPLETED_TOGGLE:
       return state.map((list, i) => {
         if (action.payload.listId !== i) {
@@ -80,6 +99,7 @@ export const todoReducer = (state = initialState, action) => {
           };
         }
       });
+
     case types.REMOVE_TASK:
       return state.map((list, i) => {
         if (action.payload.listId !== i) {
@@ -98,6 +118,7 @@ export const todoReducer = (state = initialState, action) => {
           };
         }
       });
+
     case types.EDIT_TASK_TOGGLE:
       return state.map((list, i) => {
         if (action.payload.listId !== i) {
@@ -134,6 +155,7 @@ export const todoReducer = (state = initialState, action) => {
           };
         }
       });
+
     case types.CHANGE_TASK_TITLE:
       return state.map((list, i) => {
         if (action.payload.todo.listId !== i) {
@@ -166,6 +188,7 @@ export const todoReducer = (state = initialState, action) => {
           };
         }
       });
+
     case types.ADD_TASK:
       return state.map((list, i) => {
         if (action.payload.listId !== i) {
@@ -208,6 +231,71 @@ export const todoReducer = (state = initialState, action) => {
           return {
             ...list,
             title: action.payload.newTitle,
+          };
+        }
+      });
+
+    case types.DROP_IN_TODO:
+      return state.map((list) => {
+        if (list.listId !== action.payload.todo.listId) {
+          return list;
+        } else {
+          return {
+            ...list,
+            list: {
+              ...list.list,
+              todo: list.list.todo.concat([{ ...action.payload.todo, completed: false }]),
+              completed: list.list.completed.filter(
+                (item) => item.id !== action.payload.todo.id
+              ),
+            },
+          };
+        }
+      });
+
+    case types.DROP_IN_COMPLETED:
+      return state.map((list) => {
+        if (list.listId !== action.payload.todo.listId) {
+          return list;
+        } else {
+          return {
+            ...list,
+            list: {
+              ...list.list,
+              todo: list.list.todo.filter((item) => item.id !== action.payload.todo.id),
+              completed: list.list.completed.concat([
+                { ...action.payload.todo, completed: true },
+              ]),
+            },
+          };
+        }
+      });
+
+    case types.SORTABLE:
+      return state.map((list) => {
+        if (list.listId !== action.payload.todo.listId) {
+          return list;
+        } else {
+          return {
+            ...list,
+            list: {
+              ...list.list,
+              todo: action.payload.todo.completed
+                ? list.list.todo
+                : arrayMoveImmutable(
+                    list.list.todo,
+                    action.payload.dragIndex,
+                    action.payload.hoverIndex
+                  ),
+
+              completed: !action.payload.todo.completed
+                ? list.list.completed
+                : arrayMoveImmutable(
+                    list.list.completed,
+                    action.payload.dragIndex,
+                    action.payload.hoverIndex
+                  ),
+            },
           };
         }
       });

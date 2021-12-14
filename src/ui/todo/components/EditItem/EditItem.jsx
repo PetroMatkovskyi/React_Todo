@@ -6,7 +6,7 @@ import { changeTitle, editToggle } from '../../store/action';
 
 import './EditItem.scss';
 
-export const EditItem = ({ todo }) => {
+export const EditItem = ({ todo, index }) => {
   const dispatch = useDispatch();
 
   const onChangeTitle = (e) => {
@@ -42,7 +42,7 @@ export const EditItem = ({ todo }) => {
         todo__title_completed: todo.completed,
       })}
     >
-      {todo.title}
+      {todo.title}, index:{index}
     </h5>
   );
 };
